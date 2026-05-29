@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: org.arka99
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [ app-name, data, data-jpa, gradle, http-client, java, java-application, jdbc-hikari, junit, logback, lombok, micronaut-aot, micronaut-build, micronaut-configuration-validation-gradle-plugin, micronaut-http-validation, netty-server, postgres, properties, readme, serialization-jackson, shade, static-resources, test-resources ]

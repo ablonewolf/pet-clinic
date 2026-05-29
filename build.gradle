@@ -1,0 +1,93 @@
+plugins {
+    id("io.micronaut.application") version "5.0.0"
+    id("com.gradleup.shadow") version "9.4.1"
+    id("io.micronaut.test-resources") version "5.0.0"
+    id("io.micronaut.aot") version "5.0.0"
+}
+
+version = "0.1"
+group = "org.arka99"
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.yaml:snakeyaml")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+
+application {
+    mainClass = "org.arka99.Application"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("25")
+    targetCompatibility = JavaVersion.toVersion("25")
+}
+
+
+graalvmNative.toolchainDetection = false
+graalvmNative {
+    binaries {
+        all {
+            buildArgs.add("-H:+SharedArenaSupport")
+        }
+    }
+}
+
+
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("org.arka99.*")
+    }
+    testResources {
+        version = "4.0.0"
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+        replaceLogbackXml = true
+    }
+
+}
+tasks.withType(io.micronaut.gradle.testresources.StartTestResourcesService).configureEach {
+    useClassDataSharing = false
+}
+
+tasks.named("dockerfile") {
+
+    baseImage = "eclipse-temurin:25-jre"
+}
+
+
+// https://docs.gradle.org/current/userguide/upgrading_major_version_9.html#test_task_fails_when_no_tests_are_discovered
+tasks.withType(AbstractTestTask).configureEach {
+    failOnNoDiscoveredTests = false
+}
+
+
+

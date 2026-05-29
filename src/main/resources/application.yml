@@ -1,0 +1,23 @@
+datasources:
+  default:
+    db-type: postgres
+    dialect: POSTGRES
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pet_clinic
+    username: postgres
+    password: postgres
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+        format_sql: true
+
+micronaut:
+  application:
+    name: pet-clinic
+
+kind: Application
