@@ -20,6 +20,7 @@ dependencies {
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     compileOnly("org.projectlombok:lombok")
@@ -88,6 +89,5 @@ tasks.named("dockerfile") {
 tasks.withType(AbstractTestTask).configureEach {
     failOnNoDiscoveredTests = false
 }
-
 
 
