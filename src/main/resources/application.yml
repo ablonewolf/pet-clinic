@@ -16,8 +16,11 @@ jpa:
         show_sql: true
         format_sql: true
 
+
 micronaut:
   application:
     name: pet-clinic
+  server:
+    port: 8001
 
 kind: Application
