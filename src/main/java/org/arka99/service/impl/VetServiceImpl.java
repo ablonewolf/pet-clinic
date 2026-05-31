@@ -53,12 +53,12 @@ public class VetServiceImpl implements VetService {
 
     @Override
     @Transactional
-    public Long deleteByName(String firstName, String lastName) {
+    public void deleteByName(String firstName, String lastName) {
         if (!this.vetRepository.existsByFirstNameAndLastName(firstName, lastName)) {
             throw new NoSuchElementException("Vet not found with first name: " + firstName +
                 " and last name: " + lastName + ".");
         }
-        return this.vetRepository.deleteByFirstNameAndLastName(firstName, lastName);
+        this.vetRepository.deleteByFirstNameAndLastName(firstName, lastName);
     }
 
     @Override

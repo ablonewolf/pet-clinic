@@ -12,7 +12,7 @@ public interface VetService {
 
     VetResponse createNewVet(VetCreateRequest vetCreateRequest);
 
-    Long deleteByName(String firstName, String lastName);
+    void deleteByName(String firstName, String lastName);
 
     VetResponse updateVet(VetUpdateRequest vetUpdateRequest);
 }
