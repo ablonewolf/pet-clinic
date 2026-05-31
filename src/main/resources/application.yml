@@ -22,5 +22,6 @@ micronaut:
     name: pet-clinic
   server:
     port: 8001
+    thread-selection: AUTO
 
 kind: Application
