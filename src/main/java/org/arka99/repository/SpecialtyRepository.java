@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
 
     @Query(value = """
-        SELECT specialty.id,
-               specialty.name
+        SELECT specialty.id AS id,
+               specialty.name AS name
         FROM
                Specialty specialty""")
     List<SpecialtyResponse> findAllSpecialties();
