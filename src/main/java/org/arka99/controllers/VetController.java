@@ -8,6 +8,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import lombok.RequiredArgsConstructor;
+import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.VetCreateRequest;
 import org.arka99.model.dto.request.VetUpdateRequest;
 import org.arka99.model.dto.response.VetResponse;
@@ -16,6 +17,7 @@ import org.arka99.service.VetService;
 import java.util.List;
 
 @Controller("/vets")
+@TraceThread("controller")
 @RequiredArgsConstructor
 public class VetController {
 

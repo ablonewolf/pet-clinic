@@ -3,6 +3,7 @@ package org.arka99.service.impl;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
+import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.VetCreateRequest;
 import org.arka99.model.dto.response.VetResponse;
 import org.arka99.model.dto.request.VetUpdateRequest;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
+@TraceThread("service")
 @RequiredArgsConstructor
 public class VetServiceImpl implements VetService {
 
