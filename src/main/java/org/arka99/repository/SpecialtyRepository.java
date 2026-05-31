@@ -17,11 +17,13 @@ public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
                specialty.name
         FROM
                Specialty specialty""")
-    List<SpecialtyResponse> findAllSpecialties();;
+    List<SpecialtyResponse> findAllSpecialties();
 
     void deleteByName(String name);
 
     Optional<Specialty> findByName(String name);
 
     Boolean existsByName(String name);
+
+    Boolean existsByNameAndIdNot(String name, Long id);
 }
