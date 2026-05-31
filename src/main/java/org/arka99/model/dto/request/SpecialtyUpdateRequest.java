@@ -1,11 +1,12 @@
 package org.arka99.model.dto.request;
 
-import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record SpecialtyUpdateRequest(
-    @Nonnull
+    @NotNull
     Long id,
 
-    @Nonnull
+    @NotBlank
     String name) {
 }

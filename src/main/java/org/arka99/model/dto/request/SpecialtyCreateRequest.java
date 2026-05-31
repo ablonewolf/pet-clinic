@@ -1,8 +1,8 @@
 package org.arka99.model.dto.request;
 
-import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
 
 public record SpecialtyCreateRequest(
-    @Nonnull
+    @NotBlank
     String name) {
 }
