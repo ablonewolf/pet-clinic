@@ -2,6 +2,7 @@ package org.arka99.service.impl;
 
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
+import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
 import org.arka99.model.dto.response.SpecialtyResponse;
 import org.arka99.model.entity.Specialty;
@@ -23,9 +24,9 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     }
 
     @Override
-    public SpecialtyResponse createNewSpecialty(String name) {
+    public SpecialtyResponse createNewSpecialty(SpecialtyCreateRequest createRequest) {
         Specialty specialty = new Specialty();
-        specialty.setName(name);
+        specialty.setName(createRequest.name());
 
         specialty = this.specialtyRepository.save(specialty);
         return new SpecialtyResponse(specialty.getId(), specialty.getName());
