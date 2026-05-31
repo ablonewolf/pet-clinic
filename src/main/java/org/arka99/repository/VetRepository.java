@@ -35,5 +35,36 @@ public interface VetRepository extends JpaRepository<Vet, Long> {
                Vet vet""")
     List<VetResponse> findAllVets();
 
+    @Query(value = """
+        SELECT COALESCE(
+            json_agg(
+                json_build_object(
+                    'id', vet.id,
+                    'firstName', vet.first_name,
+                    'lastName', vet.last_name,
+                    'specialties', COALESCE(specialty_group.specialties, '[]'::json)
+                )
+                ORDER BY vet.id
+            )::text,
+            '[]'
+        )
+        FROM vets vet
+        LEFT JOIN (
+            SELECT
+                vet_specialty.vet_id,
+                json_agg(
+                    json_build_object(
+                        'id', specialty.id,
+                        'name', specialty.name
+                    )
+                    ORDER BY specialty.id
+                ) AS specialties
+            FROM vet_specialties vet_specialty
+            JOIN specialties specialty ON specialty.id = vet_specialty.specialty_id
+            GROUP BY vet_specialty.vet_id
+        ) specialty_group ON specialty_group.vet_id = vet.id
+        """, nativeQuery = true)
+    String findAllVetsWithSpecialties();
+
     Boolean existsByFirstNameAndLastName(String firstName, String lastName);
 }
