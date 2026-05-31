@@ -37,9 +37,12 @@ public class SpecialtyServiceImpl implements SpecialtyService {
         Specialty existingSpecialty = this.specialtyRepository.findById(updateRequest.id())
             .orElseThrow(() -> new NoSuchElementException("Specialty not found with id: " + updateRequest.id() + "."));
 
-        if (updateRequest.name() != null) {
-            existingSpecialty.setName(updateRequest.name());
+        if (existingSpecialty.getName().equals(updateRequest.name())) {
+            throw new IllegalArgumentException("Specialty name cannot be the same as the existing name.");
+        } else if (this.specialtyRepository.existsByNameAndIdNot(updateRequest.name(), updateRequest.id())) {
+            throw new IllegalArgumentException("Specialty with name " + updateRequest.name() + " already exists.");
         }
+        existingSpecialty.setName(updateRequest.name());
 
         existingSpecialty = this.specialtyRepository.update(existingSpecialty);
         return new SpecialtyResponse(existingSpecialty.getId(), existingSpecialty.getName());
