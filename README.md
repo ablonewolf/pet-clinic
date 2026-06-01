@@ -101,6 +101,7 @@ This project uses Micronaut compile-time metadata heavily.
 Request DTOs should generally use:
 - `@Serdeable`
 - `@Introspected`
+- controller request-body parameters that should be validated are currently annotated with `@ValidatedElement`
 
 Why:
 - `@Serdeable` is used by Micronaut Serialization to deserialize request JSON.
@@ -110,6 +111,12 @@ This matters more for request DTOs because Micronaut has to:
 - bind incoming data
 - inspect constructor/record components
 - evaluate validation annotations such as `@NotBlank` and `@NotNull`
+
+Current validation trigger in this project:
+- `SpecialtyController` uses `@ValidatedElement @Body` on create/update request DTO parameters
+- `VetController` uses `@ValidatedElement @Body` on create/update request DTO parameters
+
+`VetUpdateRequest.id` is currently annotated with `@Nonnull`.
 
 ### Response DTOs
 
@@ -129,6 +136,30 @@ implementation("io.micronaut.validation:micronaut-validation")
 ```
 
 Without it, validation annotations like `@NotBlank` and `@NotNull` will not resolve correctly on the compile classpath.
+
+Validation failures are handled through:
+- `src/main/java/org/arka99/exception/ConstraintViolationExceptionHandler.java`
+
+Current behavior:
+- request-body validation failures return `400 Bad Request`
+- the response body uses `ErrorResponse`
+- multiple constraint violations are combined into one readable message string
+
+## Error Handling
+
+Standardized error responses use:
+
+```text
+src/main/java/org/arka99/model/dto/response/ErrorResponse.java
+```
+
+Current exception handlers:
+- `ResourceNotFoundExceptionHandler` for `NoSuchElementException`
+- `IllegalArgumentExceptionHandler` for `IllegalArgumentException`
+- `ConstraintViolationExceptionHandler` for validation failures
+- `GenericExceptionHandler` for uncaught `RuntimeException`
+
+These handlers return `ErrorResponse(code, message)` so error payloads stay consistent across the API.
 
 ## Projection Notes
 
@@ -172,6 +203,10 @@ The project includes tracing to observe how requests move across Netty and Micro
 - `src/main/java/org/arka99/config/TraceThread.java`
 - `src/main/java/org/arka99/config/TraceThreadInterceptor.java`
 - `src/main/java/org/arka99/config/NettyTransportLoggerRegistrar.java`
+
+Tracing classes now include:
+- detailed maintenance-oriented comments explaining why each hook exists
+- `@NullMarked` annotations for null-safety
 
 ### What is logged
 - configured Micronaut thread-selection mode at startup
