@@ -7,6 +7,14 @@ datasources:
     username: postgres
     password: postgres
 
+r2dbc:
+  datasources:
+    reactive:
+      dialect: POSTGRES
+      url: r2dbc:postgresql://localhost:5432/pet_clinic
+      username: postgres
+      password: postgres
+
 jpa:
   default:
     properties:
