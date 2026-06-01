@@ -22,9 +22,22 @@
 - Request DTOs should generally be annotated with:
   - `@Serdeable`
   - `@Introspected`
+- Request-body parameters that should trigger validation are currently annotated at controller level with:
+  - `@ValidatedElement`
 - Response DTOs generally only need:
   - `@Serdeable`
 - This project uses Micronaut compile-time introspection/serialization rather than reflection-heavy runtime behavior.
+- `VetUpdateRequest.id` is currently annotated with `@Nonnull`.
+
+## Error Handling
+- Standard API error body:
+  - `src/main/java/org/arka99/model/dto/response/ErrorResponse.java`
+- Current exception handlers:
+  - `src/main/java/org/arka99/exception/ResourceNotFoundExceptionHandler.java`
+  - `src/main/java/org/arka99/exception/IllegalArgumentExceptionHandler.java`
+  - `src/main/java/org/arka99/exception/ConstraintViolationExceptionHandler.java`
+  - `src/main/java/org/arka99/exception/GenericExceptionHandler.java`
+- Validation failures are currently aggregated into one message string and returned as `400 Bad Request`.
 
 ## Repository Projection Notes
 - For Micronaut Data record/DTO projections, JPQL select items should be explicitly aliased to DTO component names.
@@ -48,6 +61,7 @@
   - `src/main/java/org/arka99/config/TraceThreadInterceptor.java`
 - Low-level Netty transport tracing:
   - `src/main/java/org/arka99/config/NettyTransportLoggerRegistrar.java`
+- These tracing classes now include expanded explanatory comments and `@NullMarked` for null-safety.
 
 ### Current tracing intent
 - Log when request enters Micronaut HTTP filter layer.
