@@ -7,6 +7,7 @@ Micronaut 5 pet clinic application built with Netty, Micronaut Data JPA, Postgre
 - Micronaut 5
 - Netty server
 - Micronaut Data JPA + Hibernate
+- Micronaut Data R2DBC
 - PostgreSQL
 - Micronaut Serialization
 - Gradle
@@ -78,12 +79,33 @@ Endpoints:
 - `POST /vets/update`
 - `DELETE /vets?firstName={firstName}&lastName={lastName}`
 
+### Reactive Pet Clinic
+- `GET /reactive/pet-clinic/details`
+
+### Reactive Specialties
+- `GET /reactive/specialties`
+- `POST /reactive/specialties/create`
+- `POST /reactive/specialties/update`
+- `DELETE /reactive/specialties?name={name}`
+
+### Reactive Vets
+- `GET /reactive/vets`
+- `POST /reactive/vets/create`
+- `POST /reactive/vets/update`
+- `DELETE /reactive/vets?firstName={firstName}&lastName={lastName}`
+
 ## Postman
 
 Postman collection file:
 
 ```text
 postman/pet-clinic.postman_collection.json
+```
+
+Reactive Postman collection file:
+
+```text
+postman/pet-clinic-reactive.postman_collection.json
 ```
 
 It is configured for:
@@ -162,47 +184,48 @@ This was chosen intentionally instead of:
 - entity mapping + manual nested conversion
 - flat projection grouping
 
-## Thread Tracing
+## Reactive Flow
 
-The project includes tracing to observe how requests move across Netty and Micronaut execution layers.
+The project keeps the original imperative JPA/Hibernate flow and adds a parallel R2DBC flow.
 
-### Current tracing components
-- `src/main/java/org/arka99/config/ThreadSelectionLogger.java`
-- `src/main/java/org/arka99/config/ThreadTraceServerFilter.java`
-- `src/main/java/org/arka99/config/TraceThread.java`
-- `src/main/java/org/arka99/config/TraceThreadInterceptor.java`
-- `src/main/java/org/arka99/config/NettyTransportLoggerRegistrar.java`
+The reactive routes use the same PostgreSQL database and the same tables:
+- `vets`
+- `specialties`
+- `vet_specialties`
 
-### What is logged
-- configured Micronaut thread-selection mode at startup
-- request entry/exit at Micronaut filter level
-- controller/service/repository method entry and exit with thread names
-- low-level Netty inbound transport activity
-- low-level Netty outbound writes with message type and thread name
+The R2DBC datasource bean is named `reactive` so its transaction infrastructure does not collide with the JPA/Hibernate `default` datasource.
 
-### Thread selection
+R2DBC persistence models are separate from JPA entities because Hibernate relationships such as `@ManyToMany` do not apply to R2DBC. The reactive flow composes the many-to-many data with explicit queries.
 
-`micronaut.server.thread-selection` is set to `AUTO`.
+## Benchmark Helper
 
-This is intentional so you can observe thread handoff from:
-- Netty event loop threads
-- to Micronaut-managed execution threads
+To compare the pet clinic details endpoint with minimal typing, start the app and run:
 
-### Netty tracing caution
+```bash
+./scripts/bench-petclinic-details.sh imperative
+./scripts/bench-petclinic-details.sh reactive
+```
 
-The Netty customizer intentionally skips `ChannelRole.LISTENER`.
+Optional request count and concurrency:
 
-Reason:
-- listener channels are not the right place for per-request tracing
-- attaching handlers there can cause duplicate handler issues and noisy runtime errors
+```bash
+./scripts/bench-petclinic-details.sh imperative 5000 50
+./scripts/bench-petclinic-details.sh reactive 5000 50
+```
 
-If transport logs appear inconsistent after code changes, do a full restart instead of relying on hot reload.
+The script writes ApacheBench output and CPU samples under `build/benchmarks/`.
+
+## Logging
+
+The project does not include custom application logging/tracing classes. Framework/default logging is still provided by Logback and Micronaut.
 
 ## Useful Files
 - `src/main/resources/application.yml`
 - `src/test/resources/application-test.yml`
 - `postman/pet-clinic.postman_collection.json`
 - `src/main/java/org/arka99/controllers/`
+- `src/main/java/org/arka99/controllers/reactive/`
 - `src/main/java/org/arka99/repository/`
+- `src/main/java/org/arka99/repository/reactive/`
 - `src/main/java/org/arka99/service/impl/`
-- `src/main/java/org/arka99/config/`
+- `src/main/java/org/arka99/service/reactive/`

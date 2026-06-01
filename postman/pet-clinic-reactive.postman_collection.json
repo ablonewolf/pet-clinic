@@ -1,0 +1,250 @@
+{
+  "info": {
+    "name": "Pet Clinic Reactive API",
+    "_postman_id": "1e8dba48-75d9-4c54-b59f-2d4e65f43834",
+    "description": "Postman collection for the reactive Micronaut pet clinic REST endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Reactive Pet Clinic",
+      "item": [
+        {
+          "name": "Get Reactive Pet Clinic Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactive/pet-clinic/details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "pet-clinic",
+                "details"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reactive Specialties",
+      "item": [
+        {
+          "name": "Find All Reactive Specialties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactive/specialties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "specialties"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reactive Specialty",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"radiology\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reactive/specialties/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "specialties",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reactive Specialty",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"dentistry\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reactive/specialties/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "specialties",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Reactive Specialty",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactive/specialties?name=radiology",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "specialties"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "radiology"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reactive Vets",
+      "item": [
+        {
+          "name": "Find All Reactive Vets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactive/vets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "vets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reactive Vet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"James\",\n  \"lastName\": \"Carter\",\n  \"specialties\": [\n    \"radiology\",\n    \"surgery\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reactive/vets/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "vets",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reactive Vet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"firstName\": \"James\",\n  \"lastName\": \"Carter\",\n  \"specialties\": [\n    \"radiology\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reactive/vets/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "vets",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Reactive Vet",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactive/vets?firstName=James&lastName=Carter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactive",
+                "vets"
+              ],
+              "query": [
+                {
+                  "key": "firstName",
+                  "value": "James"
+                },
+                {
+                  "key": "lastName",
+                  "value": "Carter"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

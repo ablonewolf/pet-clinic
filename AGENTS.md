@@ -38,52 +38,46 @@
 - Service deserializes that JSON into `List<VetResponseForPetClinic>` with Micronaut `ObjectMapper` and wraps it in `PetClinicDetails`.
 - This was chosen intentionally instead of entity mapping or flat projection grouping.
 
-## Thread Tracing Setup
-- Startup thread-selection logger:
-  - `src/main/java/org/arka99/config/ThreadSelectionLogger.java`
-- Application-level request tracing:
-  - `src/main/java/org/arka99/config/ThreadTraceServerFilter.java`
-- Method-level tracing AOP:
-  - `src/main/java/org/arka99/config/TraceThread.java`
-  - `src/main/java/org/arka99/config/TraceThreadInterceptor.java`
-- Low-level Netty transport tracing:
-  - `src/main/java/org/arka99/config/NettyTransportLoggerRegistrar.java`
-
-### Current tracing intent
-- Log when request enters Micronaut HTTP filter layer.
-- Log controller/service/repository method entry and exit with thread names.
-- Log when Netty receives inbound traffic and when it forwards traffic toward Micronaut.
-- Log outbound Netty message writes with message type and thread name.
-
-### Important Netty tracing constraints
-- Do not attach custom Netty handlers to `LISTENER` channels for per-request tracing.
-- The current customizer skips `ChannelRole.LISTENER` intentionally.
-- Outbound response logging was broadened because Netty does not always write a plain `HttpResponse`; it may write `HttpContent`, `LastHttpContent`, or other outbound message types.
-- If transport logs appear missing, verify with a full application restart; hot reload may not reflect pipeline customizer changes reliably.
+## Logging Setup
+- Custom application logging/tracing classes were removed.
+- Framework/default logging remains via Logback and Micronaut.
+- Do not reintroduce custom request/thread/Netty logging unless explicitly requested.
 
 ## Controllers And Routes
 - `PetClinicController` base path: `/pet-clinic`
 - `SpecialtyController` base path: `/specialties`
 - `VetController` base path: `/vets`
+- Reactive controller base paths:
+  - `/reactive/pet-clinic`
+  - `/reactive/specialties`
+  - `/reactive/vets`
 - Delete operations currently use query parameters, not path variables.
+
+## Reactive Flow
+- The existing imperative JPA/Hibernate flow remains in place.
+- A parallel reactive flow uses Micronaut Data R2DBC and Reactor.
+- The reactive flow uses the same PostgreSQL database and same tables as the imperative flow.
+- The R2DBC datasource bean is named `reactive` to avoid colliding with the JPA/Hibernate `default` datasource transaction beans.
+- R2DBC models live separately from JPA entities under `src/main/java/org/arka99/model/r2dbc/`.
+- Reactive repositories live under `src/main/java/org/arka99/repository/reactive/`.
+- Reactive services live under `src/main/java/org/arka99/service/reactive/`.
+- R2DBC does not use Hibernate relationship mapping; many-to-many data is handled with explicit queries against `vet_specialties`.
 
 ## Postman Collection
 - Current collection file:
   - `postman/pet-clinic.postman_collection.json`
+- Reactive collection file:
+  - `postman/pet-clinic-reactive.postman_collection.json`
 - Base URL in collection is `http://localhost:8001`.
 - Collection was updated to match query-parameter delete endpoints.
 
 ## Known Git/Workspace Context
 - There may be unrelated staged changes in resource config files.
 - Do not blindly revert existing workspace changes.
-- A recent atomic commit added tracing across Netty and application layers:
-  - `ec03d31` `Add thread tracing across Netty and application layers`
+- Custom thread tracing code has been removed from the active branch.
 
 ## Suggested Working Style For Next Agent
 - Prefer minimal changes.
 - Re-scan controllers/config before editing endpoint docs or Postman files because routes changed multiple times during development.
 - When diagnosing Micronaut Data issues, distinguish IDE false positives from real compile/runtime failures.
-- When diagnosing Micronaut/Netty thread behavior, separate:
-  - Netty transport thread events
-  - Micronaut HTTP/filter execution
-  - controller/service/repository execution
+- Do not run build/test verification commands unless the user explicitly asks; the user prefers to run verification locally.
