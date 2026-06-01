@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.validation.annotation.ValidatedElement;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
@@ -30,13 +31,15 @@ public class SpecialtyController {
     }
 
     @Post("/create")
-    public HttpResponse<SpecialtyResponse> createNewSpecialty(@Body SpecialtyCreateRequest createRequest) {
+    public HttpResponse<SpecialtyResponse> createNewSpecialty(
+        @ValidatedElement @Body SpecialtyCreateRequest createRequest) {
         SpecialtyResponse createdSpecialty = this.specialtyService.createNewSpecialty(createRequest);
         return HttpResponse.created(createdSpecialty);
     }
 
     @Post("/update")
-    public HttpResponse<SpecialtyResponse> updateSpecialty(@Body SpecialtyUpdateRequest updateRequest) {
+    public HttpResponse<SpecialtyResponse> updateSpecialty(
+        @ValidatedElement @Body SpecialtyUpdateRequest updateRequest) {
         SpecialtyResponse updatedSpecialty = this.specialtyService.updateSpecialty(updateRequest);
         return HttpResponse.ok(updatedSpecialty);
     }
