@@ -8,7 +8,6 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import lombok.RequiredArgsConstructor;
-import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
 import org.arka99.model.dto.response.SpecialtyResponse;
@@ -17,7 +16,6 @@ import org.arka99.service.SpecialtyService;
 import java.util.List;
 
 @Controller("/specialties")
-@TraceThread("controller")
 @RequiredArgsConstructor
 public class SpecialtyController {
 

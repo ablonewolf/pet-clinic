@@ -5,7 +5,6 @@ import io.micronaut.serde.ObjectMapper;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import org.arka99.config.TraceThread;
 import org.arka99.model.dto.response.PetClinicDetails;
 import org.arka99.model.dto.response.VetResponseForPetClinic;
 import org.arka99.repository.VetRepository;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 @Singleton
-@TraceThread("service")
 @RequiredArgsConstructor
 public class PetClinicServiceImpl implements PetClinicService {
 

@@ -3,7 +3,6 @@ package org.arka99.repository;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jpa.repository.JpaRepository;
-import org.arka99.config.TraceThread;
 import org.arka99.model.dto.response.SpecialtyResponse;
 import org.arka99.model.entity.Specialty;
 
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@TraceThread("repository")
 public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
 
     @Query(value = """

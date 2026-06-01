@@ -2,7 +2,6 @@ package org.arka99.service.impl;
 
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
 import org.arka99.model.dto.response.SpecialtyResponse;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Singleton
-@TraceThread("service")
 @RequiredArgsConstructor
 public class SpecialtyServiceImpl implements SpecialtyService {
 
