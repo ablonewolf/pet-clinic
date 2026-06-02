@@ -1,12 +1,16 @@
 package org.arka99.service.impl;
 
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
+import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.VetCreateRequest;
-import org.arka99.model.dto.response.VetResponse;
 import org.arka99.model.dto.request.VetUpdateRequest;
+import org.arka99.model.dto.response.PageResponse;
+import org.arka99.model.dto.response.VetResponse;
 import org.arka99.model.entity.Specialty;
 import org.arka99.model.entity.Vet;
 import org.arka99.repository.VetRepository;
@@ -29,8 +33,18 @@ public class VetServiceImpl implements VetService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<VetResponse> findAllVets() {
-        return this.vetRepository.findAllVets();
+    public PageResponse<VetResponse> findAllVets(PageRequest pageRequest) {
+        Pageable pageable = Pageable.from(pageRequest.page() - 1, pageRequest.size());
+
+        Page<VetResponse> vetResponsePage = this.vetRepository.findAllVets(pageable);
+
+        PageResponse<VetResponse> pageResponse = PageResponse.<VetResponse>builder()
+            .contents(vetResponsePage.getContent())
+            .totalPages(vetResponsePage.getTotalPages())
+            .currentPage(vetResponsePage.getPageNumber() + 1)
+            .totalElements(vetResponsePage.getTotalSize())
+            .build();
+        return pageResponse;
     }
 
     @Override

@@ -1,14 +1,14 @@
 package org.arka99.service;
 
+import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.VetCreateRequest;
-import org.arka99.model.dto.response.VetResponse;
 import org.arka99.model.dto.request.VetUpdateRequest;
-
-import java.util.List;
+import org.arka99.model.dto.response.PageResponse;
+import org.arka99.model.dto.response.VetResponse;
 
 public interface VetService {
 
-    List<VetResponse> findAllVets();
+    PageResponse<VetResponse> findAllVets(PageRequest pageRequest);
 
     VetResponse createNewVet(VetCreateRequest vetCreateRequest);
 

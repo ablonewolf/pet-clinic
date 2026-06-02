@@ -3,11 +3,12 @@ package org.arka99.repository;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jpa.repository.JpaRepository;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import org.arka99.config.TraceThread;
 import org.arka99.model.dto.response.VetResponse;
 import org.arka99.model.entity.Vet;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,8 +35,12 @@ public interface VetRepository extends JpaRepository<Vet, Long> {
                vet.firstName as firstName,
                vet.lastName AS lastName
         FROM
-               Vet vet""")
-    List<VetResponse> findAllVets();
+               Vet vet
+        """, countQuery = """
+        SELECT COUNT(vet)
+        FROM Vet vet
+        """)
+    Page<VetResponse> findAllVets(Pageable pageable);
 
     @Query(value = """
         SELECT COALESCE(

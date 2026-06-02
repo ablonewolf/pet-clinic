@@ -4,18 +4,17 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.validation.annotation.ValidatedElement;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
+import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.VetCreateRequest;
 import org.arka99.model.dto.request.VetUpdateRequest;
+import org.arka99.model.dto.response.PageResponse;
 import org.arka99.model.dto.response.VetResponse;
 import org.arka99.service.VetService;
-
-import java.util.List;
 
 @Controller("/vets")
 @TraceThread("controller")
@@ -24,10 +23,10 @@ public class VetController {
 
     private final VetService vetService;
 
-    @Get
-    public HttpResponse<List<VetResponse>> findAllVets() {
-        List<VetResponse> vets = vetService.findAllVets();
-        return HttpResponse.ok(vets);
+    @Post
+    public HttpResponse<PageResponse<VetResponse>> findAllVets(@ValidatedElement @Body PageRequest pageRequest) {
+        PageResponse<VetResponse> response = vetService.findAllVets(pageRequest);
+        return HttpResponse.ok(response);
     }
 
     @Post("/create")
