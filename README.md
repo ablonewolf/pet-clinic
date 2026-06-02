@@ -53,6 +53,22 @@ Build:
 ./gradlew build
 ```
 
+## Tests
+
+Integration tests use Micronaut Test with Testcontainers PostgreSQL:
+
+```bash
+./gradlew test
+```
+
+The integration test base is:
+
+```text
+src/test/java/org/arka99/support/PostgresIntegrationTest.java
+```
+
+Service unit tests use JUnit Jupiter 6 and Mockito.
+
 ## API
 
 Base URL:
