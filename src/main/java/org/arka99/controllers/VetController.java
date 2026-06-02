@@ -6,7 +6,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
-import io.micronaut.validation.annotation.ValidatedElement;
+import io.micronaut.validation.Validated;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.PageRequest;
@@ -18,25 +19,26 @@ import org.arka99.service.VetService;
 
 @Controller("/vets")
 @TraceThread("controller")
+@Validated
 @RequiredArgsConstructor
 public class VetController {
 
     private final VetService vetService;
 
     @Post
-    public HttpResponse<PageResponse<VetResponse>> findAllVets(@ValidatedElement @Body PageRequest pageRequest) {
+    public HttpResponse<PageResponse<VetResponse>> findAllVets(@Valid @Body PageRequest pageRequest) {
         PageResponse<VetResponse> response = vetService.findAllVets(pageRequest);
         return HttpResponse.ok(response);
     }
 
     @Post("/create")
-    public HttpResponse<VetResponse> createNewVet(@ValidatedElement @Body VetCreateRequest vetCreateRequest) {
+    public HttpResponse<VetResponse> createNewVet(@Valid @Body VetCreateRequest vetCreateRequest) {
         VetResponse createdVet = vetService.createNewVet(vetCreateRequest);
         return HttpResponse.created(createdVet);
     }
 
     @Post("/update")
-    public HttpResponse<VetResponse> updateVet(@ValidatedElement @Body VetUpdateRequest vetUpdateRequest) {
+    public HttpResponse<VetResponse> updateVet(@Valid @Body VetUpdateRequest vetUpdateRequest) {
         VetResponse updatedVet = vetService.updateVet(vetUpdateRequest);
         return HttpResponse.ok(updatedVet);
     }

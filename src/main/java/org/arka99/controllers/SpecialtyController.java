@@ -6,7 +6,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
-import io.micronaut.validation.annotation.ValidatedElement;
+import io.micronaut.validation.Validated;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
 import org.arka99.model.dto.request.PageRequest;
@@ -18,27 +19,28 @@ import org.arka99.service.SpecialtyService;
 
 @Controller("/specialties")
 @TraceThread("controller")
+@Validated
 @RequiredArgsConstructor
 public class SpecialtyController {
 
     private final SpecialtyService specialtyService;
 
     @Post
-    public HttpResponse<PageResponse<SpecialtyResponse>> findAllSpecialties(@ValidatedElement @Body PageRequest pageRequest) {
+    public HttpResponse<PageResponse<SpecialtyResponse>> findAllSpecialties(@Valid @Body PageRequest pageRequest) {
         PageResponse<SpecialtyResponse> response = specialtyService.findAllSpecialties(pageRequest);
         return HttpResponse.ok(response);
     }
 
     @Post("/create")
     public HttpResponse<SpecialtyResponse> createNewSpecialty(
-        @ValidatedElement @Body SpecialtyCreateRequest createRequest) {
+        @Valid @Body SpecialtyCreateRequest createRequest) {
         SpecialtyResponse createdSpecialty = this.specialtyService.createNewSpecialty(createRequest);
         return HttpResponse.created(createdSpecialty);
     }
 
     @Post("/update")
     public HttpResponse<SpecialtyResponse> updateSpecialty(
-        @ValidatedElement @Body SpecialtyUpdateRequest updateRequest) {
+        @Valid @Body SpecialtyUpdateRequest updateRequest) {
         SpecialtyResponse updatedSpecialty = this.specialtyService.updateSpecialty(updateRequest);
         return HttpResponse.ok(updatedSpecialty);
     }
