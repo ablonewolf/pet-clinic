@@ -54,6 +54,13 @@
 - Shared response DTO:
   - `src/main/java/org/arka99/model/dto/response/PageResponse.java`
 - Services convert `PageRequest` to Micronaut `Pageable`, then map repository `Page<T>` into `PageResponse<T>`.
+- Specialty cursor pagination uses:
+  - request DTO: `src/main/java/org/arka99/model/dto/request/CursorPageRequest.java`
+  - response DTO: `src/main/java/org/arka99/model/dto/response/CursorPageResponse.java`
+  - route: `POST /specialties/cursor`
+- Current cursor sort is `id DESC`; cursor values are specialty ids.
+- The cursor repository method returns `CursoredPage<Specialty>` and the service maps to `SpecialtyResponse`.
+- Do not change it back to a multi-select DTO projection without testing; Hibernate keyset pagination raised `Query has multiple items in the select list` for that shape.
 
 ## Pet Clinic Details Fetching
 - `PetClinicServiceImpl` builds `PetClinicDetails` from repository-provided JSON.
@@ -92,6 +99,9 @@
 - List endpoints currently use `POST` with request-body pagination:
   - `POST /specialties`
   - `POST /vets`
+- Specialty also supports cursor pagination:
+  - `POST /specialties/cursor`
+- Cursor request uses `size`, optional `afterId`, and optional `beforeId`; only one cursor direction should be supplied.
 - Delete operations currently use query parameters, not path variables.
 
 ## Postman Collection
