@@ -18,6 +18,8 @@ dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    testImplementation(platform("org.junit:junit-bom:6.0.0"))
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.20.4"))
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.validation:micronaut-validation")
@@ -27,6 +29,8 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.yaml:snakeyaml")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
+    testImplementation("org.testcontainers:postgresql:1.20.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -89,5 +93,3 @@ tasks.named("dockerfile") {
 tasks.withType(AbstractTestTask).configureEach {
     failOnNoDiscoveredTests = false
 }
-
-
