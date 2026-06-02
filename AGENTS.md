@@ -100,6 +100,15 @@
 - Base URL in collection is `http://localhost:8001`.
 - Collection was updated to match query-parameter delete endpoints and POST-based paged list requests.
 
+## Testing Notes
+- Integration tests use `@MicronautTest(transactional = false)` and a Testcontainers PostgreSQL database.
+- Shared integration test container setup:
+  - `src/test/java/org/arka99/support/PostgresIntegrationTest.java`
+- Integration tests exercise HTTP controllers, validation, exception handlers, services, repositories, and real PostgreSQL persistence.
+- Unit tests instantiate service implementations directly with Mockito mocks.
+- Tests use JUnit Jupiter with the JUnit 6 BOM. Micronaut's Gradle DSL still uses `testRuntime("junit5")` for the Micronaut Jupiter extension naming.
+- Do not run build/test verification commands unless the user explicitly asks; the user prefers to run verification locally.
+
 ## Known Git/Workspace Context
 - There may be unrelated staged changes in resource config files.
 - Do not blindly revert existing workspace changes.
