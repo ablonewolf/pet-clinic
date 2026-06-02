@@ -41,8 +41,17 @@
         {
           "name": "Find All Specialties",
           "request": {
-            "method": "GET",
-            "header": [],
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page\": 1,\n  \"size\": 10\n}"
+            },
             "url": {
               "raw": "{{baseUrl}}/specialties",
               "host": [
@@ -140,8 +149,17 @@
         {
           "name": "Find All Vets",
           "request": {
-            "method": "GET",
-            "header": [],
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page\": 1,\n  \"size\": 10\n}"
+            },
             "url": {
               "raw": "{{baseUrl}}/vets",
               "host": [
