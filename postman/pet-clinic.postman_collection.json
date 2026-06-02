@@ -65,6 +65,33 @@
           "response": []
         },
         {
+          "name": "Find All Specialties By Cursor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"size\": 10,\n  \"afterId\": null,\n  \"beforeId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/specialties/cursor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "specialties",
+                "cursor"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Create Specialty",
           "request": {
             "method": "POST",
