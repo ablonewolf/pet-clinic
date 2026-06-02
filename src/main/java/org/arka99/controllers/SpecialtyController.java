@@ -4,18 +4,17 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.validation.annotation.ValidatedElement;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
+import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
+import org.arka99.model.dto.response.PageResponse;
 import org.arka99.model.dto.response.SpecialtyResponse;
 import org.arka99.service.SpecialtyService;
-
-import java.util.List;
 
 @Controller("/specialties")
 @TraceThread("controller")
@@ -24,10 +23,10 @@ public class SpecialtyController {
 
     private final SpecialtyService specialtyService;
 
-    @Get
-    public HttpResponse<List<SpecialtyResponse>> findAllSpecialties() {
-        List<SpecialtyResponse> specialties = specialtyService.findAllSpecialties();
-        return HttpResponse.ok(specialties);
+    @Post
+    public HttpResponse<PageResponse<SpecialtyResponse>> findAllSpecialties(@ValidatedElement @Body PageRequest pageRequest) {
+        PageResponse<SpecialtyResponse> response = specialtyService.findAllSpecialties(pageRequest);
+        return HttpResponse.ok(response);
     }
 
     @Post("/create")

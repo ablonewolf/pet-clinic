@@ -1,16 +1,19 @@
 package org.arka99.service.impl;
 
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import org.arka99.config.TraceThread;
+import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
+import org.arka99.model.dto.response.PageResponse;
 import org.arka99.model.dto.response.SpecialtyResponse;
 import org.arka99.model.entity.Specialty;
 import org.arka99.repository.SpecialtyRepository;
 import org.arka99.service.SpecialtyService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Singleton
@@ -21,8 +24,15 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     private final SpecialtyRepository specialtyRepository;
 
     @Override
-    public List<SpecialtyResponse> findAllSpecialties() {
-        return this.specialtyRepository.findAllSpecialties();
+    public PageResponse<SpecialtyResponse> findAllSpecialties(PageRequest pageRequest) {
+        Pageable pageable = Pageable.from(pageRequest.page() - 1, pageRequest.size());
+        Page<SpecialtyResponse> specialtyResponsePage = this.specialtyRepository.findAllSpecialties(pageable);
+        return PageResponse.<SpecialtyResponse>builder()
+            .contents(specialtyResponsePage.getContent())
+            .totalPages(specialtyResponsePage.getTotalPages())
+            .currentPage(specialtyResponsePage.getPageNumber() + 1)
+            .totalElements(specialtyResponsePage.getTotalSize())
+            .build();
     }
 
     @Override

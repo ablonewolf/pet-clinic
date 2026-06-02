@@ -3,11 +3,12 @@ package org.arka99.repository;
 import io.micronaut.data.annotation.Query;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jpa.repository.JpaRepository;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import org.arka99.config.TraceThread;
 import org.arka99.model.dto.response.SpecialtyResponse;
 import org.arka99.model.entity.Specialty;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,8 +19,12 @@ public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
         SELECT specialty.id AS id,
                specialty.name AS name
         FROM
-               Specialty specialty""")
-    List<SpecialtyResponse> findAllSpecialties();
+               Specialty specialty
+        """, countQuery = """
+        SELECT COUNT(specialty)
+        FROM Specialty specialty
+        """)
+    Page<SpecialtyResponse> findAllSpecialties(Pageable pageable);
 
     void deleteByName(String name);
 
