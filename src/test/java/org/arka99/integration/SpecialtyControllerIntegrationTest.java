@@ -8,9 +8,11 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.arka99.model.dto.request.CursorPageRequest;
 import org.arka99.model.dto.request.PageRequest;
 import org.arka99.model.dto.request.SpecialtyCreateRequest;
 import org.arka99.model.dto.request.SpecialtyUpdateRequest;
+import org.arka99.model.dto.response.CursorPageResponse;
 import org.arka99.model.dto.response.ErrorResponse;
 import org.arka99.model.dto.response.PageResponse;
 import org.arka99.model.dto.response.SpecialtyResponse;
@@ -75,6 +77,31 @@ class SpecialtyControllerIntegrationTest extends PostgresIntegrationTest {
         assertEquals(2, response.totalPages());
         assertEquals(2, response.totalElements());
         assertEquals(1, response.contents().size());
+    }
+
+    @Test
+    void listSpecialtiesByCursorReturnsNextPage() {
+        createSpecialty("radiology");
+        createSpecialty("surgery");
+        createSpecialty("dentistry");
+
+        CursorPageResponse<SpecialtyResponse> firstPage = client.toBlocking().retrieve(
+            HttpRequest.POST("/specialties/cursor", new CursorPageRequest(2, null, null)),
+            Argument.of(CursorPageResponse.class, SpecialtyResponse.class)
+        );
+
+        assertEquals(2, firstPage.contents().size());
+        assertTrue(firstPage.hasNext());
+        assertNotNull(firstPage.nextCursor());
+
+        CursorPageResponse<SpecialtyResponse> secondPage = client.toBlocking().retrieve(
+            HttpRequest.POST("/specialties/cursor", new CursorPageRequest(2, firstPage.nextCursor(), null)),
+            Argument.of(CursorPageResponse.class, SpecialtyResponse.class)
+        );
+
+        assertEquals(1, secondPage.contents().size());
+        assertFalse(secondPage.hasNext());
+        assertNotNull(secondPage.previousCursor());
     }
 
     @Test
