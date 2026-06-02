@@ -67,16 +67,25 @@ Endpoints:
 - `GET /pet-clinic/details`
 
 ### Specialties
-- `GET /specialties`
+- `POST /specialties`
 - `POST /specialties/create`
 - `POST /specialties/update`
 - `DELETE /specialties?name={name}`
 
 ### Vets
-- `GET /vets`
+- `POST /vets`
 - `POST /vets/create`
 - `POST /vets/update`
 - `DELETE /vets?firstName={firstName}&lastName={lastName}`
+
+Paged list requests currently use this body shape:
+
+```json
+{
+  "page": 1,
+  "size": 10
+}
+```
 
 ## Postman
 
@@ -113,8 +122,8 @@ This matters more for request DTOs because Micronaut has to:
 - evaluate validation annotations such as `@NotBlank` and `@NotNull`
 
 Current validation trigger in this project:
-- `SpecialtyController` uses `@ValidatedElement @Body` on create/update request DTO parameters
-- `VetController` uses `@ValidatedElement @Body` on create/update request DTO parameters
+- `SpecialtyController` uses `@ValidatedElement @Body` on list/create/update request DTO parameters
+- `VetController` uses `@ValidatedElement @Body` on list/create/update request DTO parameters
 
 `VetUpdateRequest.id` is currently annotated with `@Nonnull`.
 
@@ -178,6 +187,38 @@ List<SpecialtyResponse> findAllSpecialties();
 
 Why:
 - missing aliases can cause tuple/projection mapping failures at runtime
+
+## Pagination Notes
+
+Both list APIs now use request-body pagination and return a custom `PageResponse<T>`.
+
+Current pattern:
+- controller accepts `PageRequest`
+- service converts it to Micronaut `Pageable`
+- repository returns `Page<T>`
+- service maps that to `PageResponse<T>`
+
+For custom paged `@Query` methods in Micronaut Data, an explicit `countQuery` is required.
+
+Why:
+- `Pageable` only describes which slice to fetch
+- `Page<T>` also needs total-count metadata such as total elements and total pages
+- Spring Data JPA often derives the count query automatically
+- Micronaut Data is stricter here and requires the `countQuery` to be declared for custom paged projection queries
+
+Example:
+
+```java
+@Query(value = """
+    SELECT specialty.id AS id,
+           specialty.name AS name
+    FROM Specialty specialty
+    """, countQuery = """
+    SELECT COUNT(specialty)
+    FROM Specialty specialty
+    """)
+Page<SpecialtyResponse> findAllSpecialties(Pageable pageable);
+```
 
 ## Pet Clinic Details Design
 
