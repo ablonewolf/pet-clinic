@@ -84,6 +84,7 @@ Endpoints:
 
 ### Specialties
 - `POST /specialties`
+- `POST /specialties/cursor`
 - `POST /specialties/create`
 - `POST /specialties/update`
 - `DELETE /specialties?name={name}`
@@ -102,6 +103,20 @@ Paged list requests currently use this body shape:
   "size": 10
 }
 ```
+
+Specialty cursor pagination uses this body shape:
+
+```json
+{
+  "size": 10,
+  "afterId": null,
+  "beforeId": null
+}
+```
+
+Use `nextCursor` from the response as `afterId` to fetch the next page. Use `previousCursor` as `beforeId` to move backward.
+
+The specialty cursor endpoint currently sorts by `id` descending. The cursor value is the specialty `id`.
 
 ## Postman
 
@@ -235,6 +250,13 @@ Example:
     """)
 Page<SpecialtyResponse> findAllSpecialties(Pageable pageable);
 ```
+
+Specialty cursor pagination uses Micronaut Data keyset pagination with `CursoredPageable`. The repository returns `CursoredPage<Specialty>` and the service maps entities to `SpecialtyResponse`.
+
+Why:
+- Hibernate keyset pagination does not support the multi-select DTO projection used by the regular paged endpoint
+- paging over the entity keeps Micronaut/Hibernate keyset pagination compatible
+- the API still returns DTOs through `CursorPageResponse<SpecialtyResponse>`
 
 ## Pet Clinic Details Design
 
