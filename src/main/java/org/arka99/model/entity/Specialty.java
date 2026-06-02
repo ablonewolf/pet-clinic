@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "specialties")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Specialty {
+public class Specialty extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
