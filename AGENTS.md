@@ -44,6 +44,16 @@
 - Example pattern:
   - `select specialty.id as id, specialty.name as name from Specialty specialty`
 - Missing aliases can cause runtime tuple/projection mapping failures.
+- For custom paged `@Query` methods returning `Page<T>`, Micronaut Data currently requires an explicit `countQuery`.
+- This is needed because the service consumes total page/element metadata, not just the current slice.
+
+## Pagination Notes
+- `VetController` and `SpecialtyController` list endpoints now use `POST` with a request body instead of `GET`.
+- Shared request DTO:
+  - `src/main/java/org/arka99/model/dto/request/PageRequest.java`
+- Shared response DTO:
+  - `src/main/java/org/arka99/model/dto/response/PageResponse.java`
+- Services convert `PageRequest` to Micronaut `Pageable`, then map repository `Page<T>` into `PageResponse<T>`.
 
 ## Pet Clinic Details Fetching
 - `PetClinicServiceImpl` builds `PetClinicDetails` from repository-provided JSON.
@@ -79,13 +89,16 @@
 - `PetClinicController` base path: `/pet-clinic`
 - `SpecialtyController` base path: `/specialties`
 - `VetController` base path: `/vets`
+- List endpoints currently use `POST` with request-body pagination:
+  - `POST /specialties`
+  - `POST /vets`
 - Delete operations currently use query parameters, not path variables.
 
 ## Postman Collection
 - Current collection file:
   - `postman/pet-clinic.postman_collection.json`
 - Base URL in collection is `http://localhost:8001`.
-- Collection was updated to match query-parameter delete endpoints.
+- Collection was updated to match query-parameter delete endpoints and POST-based paged list requests.
 
 ## Known Git/Workspace Context
 - There may be unrelated staged changes in resource config files.
