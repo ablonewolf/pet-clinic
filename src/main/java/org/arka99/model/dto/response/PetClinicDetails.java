@@ -6,4 +6,8 @@ import java.util.List;
 
 @Serdeable
 public record PetClinicDetails(List<VetResponseForPetClinic> vetResponses) {
+
+    public PetClinicDetails {
+        vetResponses = vetResponses == null ? List.of() : vetResponses;
+    }
 }
